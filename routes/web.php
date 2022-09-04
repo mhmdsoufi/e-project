@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SectionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,11 +34,14 @@ Route::get('/invoices-list', [InvoicesController::class,'index']);
 
 Route::get('/sections', [SectionsController::class,'index']);
 
-route::post('sections/update',[SectionsController::class,'update']);
+Route::post('sections/update',[SectionsController::class,'update']);
 
-route::post('sections/destroy',[SectionsController::class,'destroy']);
+Route::post('sections/destroy',[SectionsController::class,'destroy']);
 
-route::post('/sections',[SectionsController::class,'store'])->name('sections.store');
+Route::post('/sections',[SectionsController::class,'store'])->name('sections.store');
 
+Route::get('/products', [ProductsController::class,'index']);
+
+Route::post('/products', [ProductsController::class,'store'])->name('products.store');
 
 
