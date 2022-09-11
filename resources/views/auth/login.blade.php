@@ -40,7 +40,11 @@ Log In
 												 <div class="form-group">
 											 	 <label>Password</label>
 
-                                                  <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                                  <input id="password"
+                                                        type="password"
+                                                        class="form-control @error('password') is-invalid @enderror"
+                                                        name="password"
+                                                        required autocomplete="current-password">
 
                                                   @error('password')
                                                   <span class="invalid-feedback" role="alert">
@@ -62,6 +66,7 @@ Log In
                                                     <button type="submit" class="btn btn-main-primary btn-block">
                                                     {{ __('Login') }}
                                                     </button>
+                                                    <p>Don't have an account?? <a href="{{ url('/' . $page='register') }} ">Sign Up</a></p>
 												</form>
 											</div>
 										</div>

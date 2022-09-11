@@ -30,7 +30,7 @@
 						<ul class="slide-menu">
 							<li><a class="slide-item" href="{{ url('/' . $page='invoices-list') }}">Invoices List</a></li>
 							<li><a class="slide-item" href="{{ url('/' . $page='chart-flot') }}">Paid Invoices</a></li>
-							<li><a class="slide-item" href="{{ url('/' . $page='chart-chartjs') }}">Non Paid Invoices</a></li>
+							<li><a class="slide-item" href="{{ url('/' . $page='chart-chartjs') }}"> UnPaid Invoices</a></li>
 							<li><a class="slide-item" href="{{ url('/' . $page='chart-echart') }}">Partially Paid Invoices</a></li>
 						</ul>
 					</li>

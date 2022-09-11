@@ -77,9 +77,21 @@ class ProductsController extends Controller
      * @param  \App\Models\products  $products
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, products $products)
+    public function update(Request $request)
     {
-        //
+        $id = sections::where('section_name', $request->section_name)->first()->id;
+
+        $products = products::findOrFail($request->prod_id);
+
+        $products->update([
+        'product_name' => $request->product_name,
+        'description' => $request->description,
+        'section_id' => $id,
+        ]);
+
+        session()->flash('Edit', 'Product edited successfully');
+        return back();
+
     }
 
     /**
@@ -88,8 +100,11 @@ class ProductsController extends Controller
      * @param  \App\Models\products  $products
      * @return \Illuminate\Http\Response
      */
-    public function destroy(products $products)
+    public function destroy(Request $request)
     {
-        //
+        $Products = Products::findOrFail($request->prod_id);
+        $Products->delete();
+        session()->flash('delete', 'Proudct deleted successfully');
+        return back();
     }
 }
