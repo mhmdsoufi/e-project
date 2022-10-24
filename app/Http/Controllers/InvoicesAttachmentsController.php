@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\invoices_attachments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class InvoicesAttachmentsController extends Controller
 {
+    function __construct()
+    {
+    $this->middleware('permission:Add Attachment', ['only' => ['store']]);
+    $this->middleware('permission:Delete Attachment', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -103,8 +109,31 @@ class InvoicesAttachmentsController extends Controller
      * @param  \App\Models\invoices_attachments  $invoices_attachments
      * @return \Illuminate\Http\Response
      */
-    public function destroy(invoices_attachments $invoices_attachments)
+
+    public function destroy(Request $request)
     {
-        //
+        $invoices = invoices_attachments::findOrFail($request->id_file);
+        Storage::disk('public_upload')-> delete($request->invoice_number.'/'.$request->file_name);
+        $invoices->delete();
+        session()->flash('delete', 'Attachment Deleted successfully');
+        return back();
+    }
+
+    public function open($invoice_number,$file_name)
+    {
+        $files = Storage::disk('public_upload')
+        ->getDriver()
+        ->getAdapter()
+        ->applyPathPrefix($invoice_number.'/'.$file_name);
+        return response()->file($files);
+    }
+
+    public function download($invoice_number,$file_name)
+    {
+        $content = Storage::disk('public_upload')
+        ->getDriver()
+        ->getAdapter()
+        ->applyPathPrefix($invoice_number.'/'.$file_name);
+        return response()->download($content);
     }
 }

@@ -25,7 +25,7 @@ class invoices extends Model
         'status',
         'value_status',
         'note',
-        'Payment_Date',
+        'payment_date',
         'user',
     ];
 

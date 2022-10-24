@@ -28,7 +28,8 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">Settings</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Sections</span>
+							<h4 class="content-title mb-0 my-auto">Settings</h4>
+                            <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Sections</span>
 						</div>
 					</div>
 				</div>
@@ -80,17 +81,20 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-            @endif
+                @endif
+                <div id="success_message"></div>
                     <div class="col-xl-12">
                         <div class="card mg-b-20">
                             <div class="card-header pb-0">
-                                <a class="modal-effect btn btn-outline-primary "
-                                    data-effect="effect-scale"
-                                    data-toggle="modal"
-                                    href="#modaldemo8">Add Section</a>
+                                @can('Add Section')
+                                    <a class="modal-effect btn btn-outline-primary "
+                                        data-effect="effect-scale"
+                                        data-toggle="modal"
+                                        href="#exampleModal2">Add Section</a>
+                                @endcan
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div  class="example table-responsive">
                                     <table id="example1" class="table key-buttons text-md-nowrap">
                                         <thead>
                                             <tr>
@@ -109,21 +113,28 @@
                                                 <td>{{$sec->section_name}}</td>
                                                 <td>{{ $sec->description }}</td>
                                                 <td>
-
-                                                    <a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
-                                                    data-id="{{ $sec->id }}" data-section_name="{{ $sec->section_name }}"
-                                                    data-description="{{ $sec->description }}" data-toggle="modal" href="#exampleModal2"
-                                                    title="edit">
-                                                    <i class="las la-pen"></i>
-                                                    </a>
-
-                                                    <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
-                                                    data-id="{{ $sec->id }}" data-section_name="{{ $sec->section_name }}"
-                                                    data-toggle="modal" href="#modaldemo9"
-                                                    title="delete">
-                                                    <i class="las la-trash"></i>
-                                                    </a>
-
+                                                    @can('Edit Section')
+                                                        <a class="modal-effect btn btn-sm btn-info"
+                                                            data-effect="effect-scale"
+                                                            data-id="{{ $sec->id }}"
+                                                            data-section_name="{{ $sec->section_name }}"
+                                                            data-description="{{ $sec->description }}"
+                                                            data-toggle="modal" href="#exampleModal2"
+                                                            title="edit">
+                                                            <i class="las la-pen"></i>
+                                                        </a>
+                                                    @endcan
+                                                    @can('Delete Section')
+                                                        <a class="modal-effect btn btn-sm btn-danger"
+                                                            data-effect="effect-scale"
+                                                            data-id="{{ $sec->id }}"
+                                                            data-section_name="{{ $sec->section_name }}"
+                                                            data-toggle="modal"
+                                                            href="#modaldemo9"
+                                                            title="delete">
+                                                            <i class="las la-trash"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -133,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Basic modal -->
+                    <!-- Basic modal
                         <div class="modal" id="modaldemo8">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content modal-content-demo">
@@ -142,7 +153,7 @@
                                         <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                                         <span aria-hidden="true">&times;</span></button>
                                     </div>
-                                    <form action="{{route('sections.store')}}" method="post">
+                                    <form action="" method="post">
                                         {{ csrf_field() }}
                                         <div class="modal-body">
                                             <div class="form-group">
@@ -171,11 +182,11 @@
                                 </div>
                             </div>
                         </div>
-                    <!-- End Basic modal -->
-				</div>
+                        End Basic modal -->
+                    </div>
 				<!-- row closed -->
                 <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
+                            aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -186,21 +197,20 @@
                                     </div>
                                     <div class="modal-body">
 
-                                        <form action="sections/update" method="post" autocomplete="off">
-                                            {{method_field('post')}}
+                                        <form  autocomplete="off">
                                             {{csrf_field()}}
                                             <div class="form-group">
-                                                <input type="hidden" name="id" id="id" value="">
+                                                <input class="id" type="hidden" name="id" id="id" value="">
                                                 <label for="recipient-name" class="col-form-label">Section Name</label>
-                                                <input class="form-control" name="section_name" id="section_name" type="text" required="true">
+                                                <input class="sectionname form-control" name="section_name" id="section_name" type="text" required="true">
                                             </div>
                                             <div class="form-group">
                                                 <label for="message-text" class="col-form-label">Descriptipn</label>
-                                                <textarea class="form-control" id="description" name="description"></textarea>
+                                                <textarea class="description form-control" id="description" name="description"></textarea>
                                             </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary"> Submit </button>
+                                        <button type="submit" class="reload add_section btn btn-primary"> Submit </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal"> Close </button>
                                     </div>
                                     </form>
@@ -233,7 +243,6 @@
                             </form>
                         </div>
                     </div>
-
             </div>
 			<!-- Container closed -->
 		</div>
@@ -286,5 +295,43 @@
         modal.find('.modal-body #section_name').val(section_name);
     })
 </script>
+<script>
+    $(document).ready(function(){
+
+        $(document).on('click', '.add_section', function (e) {
+            e.preventDefault();
+
+            var data = {
+                'id':$('.id').val(),
+                'section_name':$('.sectionname').val(),
+                'description':$('.description').val(),
+            }
+
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "post",
+                url: "/sections/update",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if(response.status==200){
+                        $('#success_message').addClass('alert alert-success');
+                        $('#success_message').text(response.message);
+                        $('#exampleModal2').modal('hide');
+                        $('#exampleModal2').find('input').val("");
+                    }
+                    console.log(response);
+                }
+            });
+            $('.example').load(location.href+" .example");
+        });
+    });
+</script>
+
 
 @endsection

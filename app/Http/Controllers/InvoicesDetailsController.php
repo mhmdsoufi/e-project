@@ -2,25 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Auth;
 use App\Models\invoices;
 use App\Models\invoices_details;
 use App\Models\invoices_attachments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\DatabaseNotification;
 
 class InvoicesDetailsController extends Controller
 {
+    function __construct()
+    {
+    $this->middleware('permission:Invoices List', ['only' => ['index']]);
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index(Request $request , $id)
     {
+        $userUnreadNotification=auth()->user()->Notifications[$id-1]->id;
         $invoices=invoices::where('id',$id)->first();
         $details=invoices_details::where('id_invoice',$id)->get();
         $attachments=invoices_attachments::where('invoice_id',$id)->get();
+
+        if($userUnreadNotification) {
+            $notification = DatabaseNotification::find( $userUnreadNotification );
+                $notification->update(['read_at' => now()]);
+                $notification->save();}
         return view('invoices.detail_invoice',compact('invoices','details','attachments'));
+    }
+    public function markasread(){
+        $userUnreadNotification= auth()->user()->unreadNotifications;
+
+        if($userUnreadNotification) {
+            $userUnreadNotification->markAsRead();
+            return back();
+        }
     }
 
     /**
@@ -84,30 +105,8 @@ class InvoicesDetailsController extends Controller
      * @param  \App\Models\invoices_details  $invoices_details
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy()
     {
-        $invoices = invoices_attachments::findOrFail($request->id_file);
-        Storage::disk('public_upload')-> delete($request->invoice_number.'/'.$request->file_name);
-        $invoices->delete();
-        session()->flash('delete', 'Attachment Deleted successfully');
-        return back();
-    }
-
-    public function open($invoice_number,$file_name)
-    {
-        $files = Storage::disk('public_upload')
-        ->getDriver()
-        ->getAdapter()
-        ->applyPathPrefix($invoice_number.'/'.$file_name);
-        return response()->file($files);
-    }
-
-    public function download($invoice_number,$file_name)
-    {
-        $content = Storage::disk('public_upload')
-        ->getDriver()
-        ->getAdapter()
-        ->applyPathPrefix($invoice_number.'/'.$file_name);
-        return response()->download($content);
+        //
     }
 }

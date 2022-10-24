@@ -67,7 +67,7 @@
 													<!-- Tabs -->
 													<ul class="nav panel-tabs main-nav-line">
 														<li class="nav-item"><a href="#tab1" class="nav-link active" data-toggle="tab">Details</a></li>
-														<li class="nav-item"><a href="#tab2" class="nav-link" data-toggle="tab"> Payment statuses </a></li>
+														<li class="nav-item"><a href="#tab2" class="nav-link" data-toggle="tab"> Payment Status </a></li>
 														<li class="nav-item"><a href="#tab3" class="nav-link" data-toggle="tab"> attachments </a></li>
 													</ul>
 												</div>
@@ -170,7 +170,7 @@
                                                                                         class="badge badge-pill badge-warning">{{ $det->status }}</span>
                                                                                 </td>
                                                                             @endif
-                                                                            <td>{{ $det->Payment_Date }}</td>
+                                                                            <td>{{ $det->payment_date }}</td>
                                                                             <td>{{ $det->note }}</td>
                                                                             <td>{{ $det->created_at }}</td>
                                                                             <td>{{ $det->user }}</td>
@@ -181,35 +181,37 @@
                                                         </div>
                                                     </div>
 													<div class="tab-pane" id="tab3">
-                                                        <div class="card-body">
-                                                            <p class="text-danger">* Attachments Format: pdf, jpeg ,.jpg , png </p>
-                                                            <h5 class="card-title">Add Attachments</h5>
-                                                            <form method="post"
-                                                                action="{{ url('/InvoiceAttachments') }}"
-                                                                enctype="multipart/form-data">
-                                                                {{ csrf_field() }}
-                                                                <div class="custom-file">
-                                                                    <input type="file"
-                                                                        class="custom-file-input"
-                                                                        id="customFile"
-                                                                        name="file_name"
-                                                                        required="true">
-                                                                    <input type="hidden"
-                                                                        id="customFile"
-                                                                        name="invoice_number"
-                                                                        value="{{ $invoices->invoice_number }}">
-                                                                    <input type="hidden"
-                                                                        id="invoice_id"
-                                                                        name="invoice_id"
-                                                                        value="{{ $invoices->id }}">
-                                                                    <label class="custom-file-label"
-                                                                        for="customFile">Select Attachment</label>
-                                                                </div><br><br>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary btn-sm "
-                                                                    name="uploadedFile">Submit</button>
-                                                            </form>
-                                                        </div>
+                                                        @can('Add Attachment')
+                                                            <div class="card-body">
+                                                                <p class="text-danger">* Attachments Format: pdf, jpeg ,.jpg , png </p>
+                                                                <h5 class="card-title">Add Attachments</h5>
+                                                                <form method="post"
+                                                                    action="{{ url('/InvoiceAttachments') }}"
+                                                                    enctype="multipart/form-data">
+                                                                    {{ csrf_field() }}
+                                                                    <div class="custom-file">
+                                                                        <input type="file"
+                                                                            class="custom-file-input"
+                                                                            id="customFile"
+                                                                            name="file_name"
+                                                                            required="true">
+                                                                        <input type="hidden"
+                                                                            id="customFile"
+                                                                            name="invoice_number"
+                                                                            value="{{ $invoices->invoice_number }}">
+                                                                        <input type="hidden"
+                                                                            id="invoice_id"
+                                                                            name="invoice_id"
+                                                                            value="{{ $invoices->id }}">
+                                                                        <label class="custom-file-label"
+                                                                            for="customFile">Select Attachment</label>
+                                                                    </div><br><br>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary btn-sm "
+                                                                        name="uploadedFile">Submit</button>
+                                                                </form>
+                                                            </div>
+                                                        @endcan
                                                         <div class="table-responsive mt-15">
                                                             <table class="table center-aligned-table mb-0 table table-hover"
                                                                 style="text-align:center">
@@ -244,12 +246,14 @@
                                                                                         class="fas fa-download"></i>&nbsp;
                                                                                     Download</a>
 
+                                                                                @can('Delete Attachment')
                                                                                     <button class="btn btn-outline-danger btn-sm"
                                                                                         data-toggle="modal"
                                                                                         data-file_name="{{ $attach->file_name }}"
                                                                                         data-invoice_number="{{ $attach->invoice_number }}"
                                                                                         data-id_file="{{ $attach->id }}"
                                                                                         data-target="#delete_file">Delete</button>
+                                                                                @endcan
 
                                                                             </td>
                                                                         </tr>

@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SectionsController extends Controller
 {
+    function __construct()
+    {
+    $this->middleware('permission:Sections', ['only' => ['index']]);
+    $this->middleware('permission:Add Section|Edit Section', ['only' => ['update']]);
+    $this->middleware('permission:Delete Section', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -38,27 +44,31 @@ class SectionsController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
 
-        $b_exists = sections::where('section_name','=',$input['section_name'])->exists();
 
-        if ($b_exists){
 
-            session()->flash('Error','Section is already registered');
-            return redirect('/sections');
-        }
-        else{
 
-            sections::create([
-                'section_name' => $request -> section_name,
-                'description' => $request -> description,
-                'created_by' =>(Auth::user()->name),
-            ]);
+//        $input = $request->all();
 
-            session()->flash('Success','Section has been added Successfully');
-            return redirect('/sections');
+//        $b_exists = sections::where('section_name','=',$input['section_name'])->exists();
 
-        }
+//        if ($b_exists){
+
+//            session()->flash('Error','Section is already registered');
+//          return redirect('/sections');
+//        }
+//        else{
+
+//            sections::create([
+//                'section_name' => $request -> section_name,
+//                'description' => $request -> description,
+//                'created_by' =>(Auth::user()->name),
+//            ]);
+
+//            session()->flash('Success','Section has been added Successfully');
+//            return redirect('/sections');
+
+//        }
     }
 
     /**
@@ -67,9 +77,9 @@ class SectionsController extends Controller
      * @param  \App\Models\sections  $sections
      * @return \Illuminate\Http\Response
      */
-    public function show(sections $sections)
+    public function show($id)
     {
-        //
+        return sections::find($id);
     }
 
     /**
@@ -90,29 +100,38 @@ class SectionsController extends Controller
      * @param  \App\Models\sections  $sections
      * @return \Illuminate\Http\Response
      */
+
+
+
     public function update(Request $request)
     {
         $input = $request->all();
         $id = $request->id;
-        $b_exists = sections::where('section_name','=',$input['section_name'])->exists();
+        if ($id == ""){
+                sections::create([
+                    'section_name' => $request -> section_name,
+                    'description' => $request -> description,
+                    'created_by' =>''
+                ]);
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'added',
 
-        if ($b_exists){
-
-            session()->flash('Error','Section is already registered');
-            return redirect('/sections');
+                ]);
         }
-        else{
+        else
+        {
             $sections = sections::find($id);
             $sections->update([
                 'section_name' => $request->section_name,
                 'description' => $request->description,
             ]);
-
-            session()->flash('edit','Section edited successfully');
-            return redirect('/sections');
+            return response()->json([
+                'status'=>200,
+                'message'=>'edited',
+            ]);
 
         }
-
     }
 
     /**
@@ -128,4 +147,5 @@ class SectionsController extends Controller
         session()->flash('delete','Section deleted successfully');
         return redirect('/sections');
     }
+
 }

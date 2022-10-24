@@ -56,10 +56,12 @@
                     <div class="col-xl-12">
                         <div class="card mg-b-20">
                             <div class="card-header pb-0">
-                                <a class="modal-effect btn btn-outline-primary "
-                                data-effect="effect-scale"
-                                data-toggle="modal"
-                                href="#modaldemo8">Add Product</a>
+                                @can('Add Product')
+                                    <a class="modal-effect btn btn-outline-primary "
+                                        data-effect="effect-scale"
+                                        data-toggle="modal"
+                                        href="#modaldemo8">Add Product</a>
+                                @endcan
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -83,19 +85,22 @@
                                                 <td>{{$prod->section->section_name}}</td>
                                                 <td>{{ $prod->description }}</td>
                                                 <td>
-                                                    <button class="btn btn-outline-success btn-sm"
-                                                            data-product_name="{{ $prod->product_name }}"
-                                                            data-prod_id="{{ $prod->id }}"
-                                                            data-section_name="{{ $prod->section->section_name }}"
-                                                            data-description="{{ $prod->description }}"
-                                                            data-toggle="modal"
-                                                            data-target="#edit_product">Edit</button>
-
-                                                    <button class="btn btn-outline-danger btn-sm "
-                                                            data-prod_id="{{ $prod->id }}"
-                                                            data-product_name="{{ $prod->product_name }}"
-                                                            data-toggle="modal"
-                                                            data-target="#modaldemo9">Delete</button>
+                                                    @can('Edit Product')
+                                                        <button class="btn btn-outline-success btn-sm"
+                                                                data-product_name="{{ $prod->product_name }}"
+                                                                data-prod_id="{{ $prod->id }}"
+                                                                data-section_name="{{ $prod->section->section_name }}"
+                                                                data-description="{{ $prod->description }}"
+                                                                data-toggle="modal"
+                                                                data-target="#edit_product">Edit</button>
+                                                    @endcan
+                                                    @can('Delete Product')
+                                                        <button class="btn btn-outline-danger btn-sm "
+                                                                data-prod_id="{{ $prod->id }}"
+                                                                data-product_name="{{ $prod->product_name }}"
+                                                                data-toggle="modal"
+                                                                data-target="#modaldemo9">Delete</button>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                             @endforeach

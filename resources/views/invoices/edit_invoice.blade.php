@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/plugins/telephoneinput/telephoneinput-rtl.css') }}">
 @endsection
 @section('title')
-    Add Invoice
+    {{isset($invoices) ? 'Edit Invoice' : 'Add Invoice'}}
 @stop
 
 @section('page-header')
@@ -21,7 +21,7 @@
         <div class="my-auto">
             <div class="d-flex">
                 <h4 class="content-title mb-0 my-auto">Invoices</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/Edit Invoice</span>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">{{isset($invoices) ? '/Edit Invoice' : '/Add Invoice'}}</span>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{url('invoices/update')}}"
+                    <form action="{{isset($invoices) ? 'invoices/update' : '/invoices'  }}"
                         method="post"
                         enctype="multipart/form-data"
                         autocomplete="off">
@@ -49,14 +49,14 @@
                                 <label for="inputName" class="control-label">Invoice Number</label>
                                 <input type="hidden"
                                     name="invoice_id"
-                                    value="{{ $invoices->id }}">
+                                    value="{{old('invoice_id' ,isset($invoices) ? $invoices->id : '' )}}">
                                 <input type="text"
                                     class="form-control"
                                     id="inputName"
                                     name="invoice_number"
                                     title="Please enter the invoice number"
                                     required="true"
-                                    value="{{$invoices->invoice_number}}">
+                                    value="{{old('invoice_number' ,isset($invoices) ? $invoices->invoice_number : '' )}}">
                             </div>
 
                             <div class="col">
@@ -65,7 +65,7 @@
                                     name="invoice_Date"
                                     placeholder="YYYY-MM-DD"
                                     type="text"
-                                    value="{{ $invoices->invoice_date }}"
+                                    value="{{old('invoice_Date' ,isset($invoices) ? $invoices->invoice_date :  date('Y-m-d')  )}}"
                                     required="true">
                             </div>
 
@@ -75,7 +75,7 @@
                                     name="due_date"
                                     placeholder="YYYY-MM-DD"
                                     type="text"
-                                    value="{{$invoices->due_date}}"
+                                    value="{{old('due_date' ,isset($invoices) ? $invoices->due_date : date('Y-m-d')  )}}"
                                     required="true">
                             </div>
 
@@ -90,8 +90,8 @@
                                     onclick="console.log($(this).val())"
                                     onchange="console.log('change is firing')">
                                     <!--placeholder-->
-                                    <option value="{{$invoices->section->id}}"
-                                        selected abled>{{$invoices->section->section_name}}</option>
+                                    <option value="{{old('Section' ,isset($invoices) ? $invoices->section->id : '' )}}"
+                                        selected abled>{{old('Section' ,isset($invoices) ? $invoices->section->section_name : '' )}}</option>
                                     @foreach ($sections as $section)
                                         <option value="{{ $section->id }}"> {{ $section->section_name }}</option>
                                         @endforeach
@@ -103,7 +103,7 @@
                                     <select id="product"
                                     name="product"
                                     class="form-control">
-                                    <option value="{{$invoices->product}}"> {{$invoices->product}}</option>
+                                    <option value="{{old('product' ,isset($invoices) ? $invoices->product : '' )}}"> {{old('product' ,isset($invoices) ? $invoices->product : '' )}}</option>
                                 </select>
                             </div>
 
@@ -114,7 +114,7 @@
                                     id="inputName"
                                     name="amount_collection"
                                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                    value="{{$invoices->amount_collection}}">
+                                    value="{{old('amount_collection' ,isset($invoices) ? $invoices->amount_collection : '' )}}">
                                 </div>
                             </div>
 
@@ -131,7 +131,7 @@
                                     name="amount_commission"
                                     title="Please enter the commission amount"
                                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                    value="{{$invoices->amount_commission}}"
+                                    value="{{old('amount_commission' ,isset($invoices) ? $invoices->amount_commission : '' )}}"
                                     required="true">
                                 </div>
 
@@ -143,7 +143,7 @@
                                     name="discount"
                                     title="Please enter the discount amount"
                                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                    value="{{$invoices->discount}}"
+                                    value="{{old('discount' ,isset($invoices) ? $invoices->discount : '' )}}"
                                     require="true">
                             </div>
 
@@ -154,7 +154,7 @@
                                     class="form-control"
                                     onchange="myFunction()">
                                     <!--placeholder-->
-                                    <option value="{{ $invoices->rate_vat }}" selected abled>{{ $invoices->rate_vat }}</option>
+                                    <option value="{{old('rate_vat' ,isset($invoices) ? $invoices->rate_vat : '' )}}" selected abled>{{old('rate_vat' ,isset($invoices) ? $invoices->rate_vat : '' )}}</option>
                                     <option value=" 5%">5%</option>
                                     <option value="10%">10%</option>
                                 </select>
@@ -171,7 +171,7 @@
                                     class="form-control"
                                     id="Value_VAT"
                                     name="value_VAT"
-                                    value="{{ $invoices->value_vat }}"
+                                    value="{{ old('value_VAT' ,isset($invoices) ? $invoices->value_vat : '' )}}"
                                     readonly="true">
                             </div>
 
@@ -181,7 +181,7 @@
                                     class="form-control"
                                     id="Total"
                                     name="total"
-                                    value="{{ $invoices->total }}"
+                                    value="{{ old('total' ,isset($invoices) ? $invoices->total : '' )}}"
                                     readonly="true">
                             </div>
                         </div>
@@ -193,14 +193,28 @@
                                 <textarea class="form-control"
                                     id="exampleTextarea"
                                     name="note"
-                                    value="{{ $invoices->note }}"
-                                    rows="3">{{ $invoices->note }}</textarea>
+                                    value="{{ old('note' ,isset($invoices) ? $invoices->note : '' )}}"
+                                    rows="3">{{ old('note' ,isset($invoices) ? $invoices->note : '' ) }}</textarea>
 
                             </div>
                         </div><br>
 
+                        @if (isset($invoices))
+                        @else
+                        <p class="text-danger">* Attachment Format: pdf, jpeg ,.jpg , png </p>
+                        <h5 class="card-title">Attachments</h5>
+
+                        <div class="col-sm-12 col-md-12">
+                            <input type="file"
+                                name="pic"
+                                class="dropify"
+                                accept=".pdf,.jpg, .png, image/jpeg, image/png"
+                                data-height="70" />
+                        </div><br>
+
+                        @endif
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-primary">Save Data</button>
+                            <button type="submit" class="btn btn-primary">{{isset($invoices) ? 'Update' : 'Create'}}</button>
                         </div>
 
 
