@@ -28,5 +28,6 @@ Route::get('/sections',function(){
 Route::post('/sections',[SectionsController::class , 'update']);
 Route::put('/sections/{id}',[SectionsController::class , 'update']);
 Route::get('/sections/{id}',[SectionsController::class , 'show']);
+Route::get('/sections/{id}/inv',[SectionsController::class , 'showev']);
 Route::delete('/sections/{id}',[SectionsController::class , 'destroyapi']);
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\invoices;
 use App\Models\sections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +80,12 @@ class SectionsController extends Controller
     public function show($id)
     {
         return sections::find($id);
+    }
+    public function showev($id)
+    {
+        $sections=sections::where('id',$id)->get('section_name');
+        $inv=invoices::where('section_id', $id)->get();
+        return $inv;
     }
 
     /**
